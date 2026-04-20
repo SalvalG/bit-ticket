@@ -1,0 +1,124 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 80px;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.hero-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.05);
+  animation: slowZoom 20s ease-in-out infinite alternate;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 10, 12, 0.3) 0%,
+    rgba(10, 10, 12, 0.8) 60%,
+    var(--bg-dark) 100%
+  );
+}
+
+.hero-content {
+  max-width: 900px;
+  width: 100%;
+  padding: 0 24px;
+  text-align: center;
+  z-index: 1;
+  animation: fadeUp 1s ease-out forwards;
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+  color: var(--text-main);
+}
+
+.hero-title {
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  letter-spacing: -1px;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto 48px;
+  line-height: 1.6;
+}
+
+.hero-search {
+  display: flex;
+  padding: 12px;
+  border-radius: 60px;
+  max-width: 650px;
+  margin: 0 auto;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  padding: 0 24px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #6b7280;
+}
+
+@keyframes slowZoom {
+  0% { transform: scale(1.05); }
+  100% { transform: scale(1.15); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .hero-search {
+    flex-direction: column;
+    border-radius: 20px;
+    padding: 16px;
+  }
+  .search-input {
+    padding: 12px 16px;
+    text-align: center;
+  }
+  .hero-search .btn-primary {
+    width: 100%;
+  }
+}

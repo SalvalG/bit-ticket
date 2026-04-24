@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Param,
   Body,
   Query,
@@ -63,5 +64,13 @@ export class EventsController {
   @Roles(UserRole.ADMIN)
   async cancel(@Param('id') id: string, @Body('motivo') motivo: string) {
     return this.eventsService.cancel(id, motivo);
+  }
+
+  /** DELETE /api/events/:id — Eliminar evento permanentemente (Admin) */
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async remove(@Param('id') id: string) {
+    return this.eventsService.remove(id);
   }
 }

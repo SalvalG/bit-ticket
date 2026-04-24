@@ -40,11 +40,15 @@ function App() {
         onLoginClick={() => setIsAuthModalOpen(true)} 
         onLogout={handleLogout} 
       />
-      <Hero onSearch={(q) => setSearchQuery(q)} />
+      <Hero
+        onSearch={(q) => setSearchQuery(q)}
+        searchQuery={searchQuery}
+      />
       <Events 
         user={user} 
         token={token} 
         searchQuery={searchQuery}
+        onClearSearch={() => setSearchQuery('')}
         onRequireLogin={() => setIsAuthModalOpen(true)} 
       />
       

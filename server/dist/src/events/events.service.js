@@ -115,6 +115,16 @@ let EventsService = class EventsService {
             ordenes_afectadas: ticketsVendidos,
         };
     }
+    async remove(id) {
+        const event = await this.findOne(id);
+        const zonas = event.zonas || [];
+        for (const zona of zonas) {
+            await this.ticketsRepository.delete({ zona_id: zona.id });
+        }
+        await this.zonesRepository.delete({ evento_id: id });
+        await this.eventsRepository.delete(id);
+        return { message: `Evento "${event.nombre}" eliminado correctamente.` };
+    }
 };
 exports.EventsService = EventsService;
 exports.EventsService = EventsService = __decorate([

@@ -46,6 +46,9 @@ let EventsController = class EventsController {
     async cancel(id, motivo) {
         return this.eventsService.cancel(id, motivo);
     }
+    async remove(id) {
+        return this.eventsService.remove(id);
+    }
 };
 exports.EventsController = EventsController;
 __decorate([
@@ -93,6 +96,15 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], EventsController.prototype, "cancel", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(user_entity_1.UserRole.ADMIN),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], EventsController.prototype, "remove", null);
 exports.EventsController = EventsController = __decorate([
     (0, common_1.Controller)('events'),
     __metadata("design:paramtypes", [events_service_1.EventsService])

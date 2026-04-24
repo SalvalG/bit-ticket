@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './Events.css';
 import EventModal from './EventModal';
 import CheckoutModal from './CheckoutModal';
@@ -14,37 +14,54 @@ const MOCK_EVENTS_FALLBACK = [
   }
 ];
 
-const Events = ({ user, token, onRequireLogin, searchQuery }) => {
-  const [events, setEvents] = useState([]);
+const Events = ({ user, token, onRequireLogin, searchQuery, onClearSearch }) => {
+  // Todos los eventos cargados del backend
+  const [allEvents, setAllEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   const [purchasingEvent, setPurchasingEvent] = useState(null);
 
+  // Cargar TODOS los eventos (sin filtro en la URL)
   const fetchEvents = async () => {
     setLoading(true);
     try {
-      let url = 'http://localhost:3001/api/events';
-      if (searchQuery) {
-        url += `?nombre=${encodeURIComponent(searchQuery)}`;
-      }
-      const res = await fetch(url);
+      const res = await fetch('http://localhost:3001/api/events');
       if (!res.ok) throw new Error('Error al obtener los eventos del servidor');
       const data = await res.json();
-      setEvents(data);
+      setAllEvents(data);
       setError('');
     } catch (err) {
       console.error(err);
       setError('No se pudo conectar al servidor. Mostrando datos de prueba.');
-      setEvents(MOCK_EVENTS_FALLBACK);
+      setAllEvents(MOCK_EVENTS_FALLBACK);
     } finally {
       setLoading(false);
     }
   };
 
+  // Carga inicial
   useEffect(() => {
     fetchEvents();
-  }, [searchQuery]);
+  }, []);
+
+  // Filtrado local en tiempo real (letra por letra)
+  const events = useMemo(() => {
+    if (!searchQuery || searchQuery.trim() === '') return allEvents;
+    const q = searchQuery.toLowerCase().trim();
+    return allEvents.filter(
+      (ev) =>
+        ev.nombre?.toLowerCase().includes(q) ||
+        ev.ubicacion?.toLowerCase().includes(q) ||
+        ev.descripcion?.toLowerCase().includes(q)
+    );
+  }, [allEvents, searchQuery]);
+
+  // Botón actualizar: recarga del backend Y limpia la búsqueda
+  const handleRefresh = async () => {
+    if (onClearSearch) onClearSearch();
+    await fetchEvents();
+  };
 
   const formatDate = (isoString) => {
     try {
@@ -59,9 +76,21 @@ const Events = ({ user, token, onRequireLogin, searchQuery }) => {
     <section className="events-section" id="eventos">
       <div className="events-container">
         <div className="events-header">
-          <h2>Eventos <span className="text-gradient">Disponibles</span></h2>
-          <div style={{ display: 'flex', gap: '16px' }}>
-            <button className="btn-secondary" onClick={fetchEvents}>Actualizar 🔄</button>
+          <h2>Eventos <span className="text-gradient">Disponibles</span>
+            {searchQuery && (
+              <span className="search-tag">
+                "{searchQuery}"
+                <button className="search-tag-clear" onClick={handleRefresh} title="Limpiar búsqueda">✕</button>
+              </span>
+            )}
+          </h2>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+            {searchQuery && (
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                {events.length} resultado{events.length !== 1 ? 's' : ''}
+              </span>
+            )}
+            <button className="btn-secondary" onClick={handleRefresh}>Actualizar 🔄</button>
             {user && user.rol === 'ADMIN' && (
               <button className="btn-primary" onClick={() => setIsEventModalOpen(true)}>+ Nuevo Evento</button>
             )}
@@ -75,7 +104,11 @@ const Events = ({ user, token, onRequireLogin, searchQuery }) => {
         ) : (
           <div className="events-grid">
             {events.length === 0 ? (
-              <div style={{ color: 'var(--text-muted)' }}>No hay eventos disponibles aún.</div>
+              <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px' }}>
+                {searchQuery
+                  ? `No se encontraron eventos para "${searchQuery}".`
+                  : 'No hay eventos disponibles aún.'}
+              </div>
             ) : (
               events.map(event => (
                 <div key={event.id} className="event-card glass-panel">
@@ -128,7 +161,6 @@ const Events = ({ user, token, onRequireLogin, searchQuery }) => {
           onRequireLogin();
         }}
         onPurchaseSuccess={(boleto) => {
-          // Aquí podríamos descargar automáticamente o actualizar UI
           console.log("Boleto comprado:", boleto);
         }}
       />

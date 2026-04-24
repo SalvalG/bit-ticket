@@ -163,4 +163,26 @@ export class EventsService {
       ordenes_afectadas: ticketsVendidos,
     };
   }
+
+  /**
+   * Eliminar evento permanentemente (Admin).
+   * Elimina el evento, sus zonas y boletos asociados.
+   */
+  async remove(id: string): Promise<{ message: string }> {
+    const event = await this.findOne(id);
+
+    // Eliminar todos los tickets de las zonas del evento
+    const zonas = event.zonas || [];
+    for (const zona of zonas) {
+      await this.ticketsRepository.delete({ zona_id: zona.id });
+    }
+
+    // Eliminar las zonas
+    await this.zonesRepository.delete({ evento_id: id });
+
+    // Eliminar el evento
+    await this.eventsRepository.delete(id);
+
+    return { message: `Evento "${event.nombre}" eliminado correctamente.` };
+  }
 }

@@ -21,4 +21,7 @@ export declare class EventsService {
         event: Event;
         ordenes_afectadas: number;
     }>;
+    remove(id: string): Promise<{
+        message: string;
+    }>;
 }

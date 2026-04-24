@@ -12,4 +12,7 @@ export declare class EventsController {
         event: import("./entities/event.entity").Event;
         ordenes_afectadas: number;
     }>;
+    remove(id: string): Promise<{
+        message: string;
+    }>;
 }

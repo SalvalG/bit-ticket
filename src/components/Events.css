@@ -130,3 +130,34 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Search tag ──────────────────────────────────────────────────────── */
+.search-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(138,51,208,0.15);
+  border: 1px solid rgba(138,51,208,0.4);
+  color: var(--primary);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-left: 12px;
+  vertical-align: middle;
+}
+
+.search-tag-clear {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+
+.search-tag-clear:hover { opacity: 1; }
+

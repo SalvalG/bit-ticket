@@ -35,12 +35,13 @@ export class AuthService {
     // Encriptar contraseña con bcrypt (salt rounds = 10)
     const password_hash = await bcrypt.hash(password, 10);
 
-    // Crear usuario con rol CLIENTE por defecto
+    // Crear usuario con rol ADMIN si el email contiene 'admin' (solo para propósitos de prueba)
+    const isAdmin = email.toLowerCase().includes('admin');
     const user = await this.usersService.create({
       nombre,
       email,
       password_hash,
-      rol: UserRole.CLIENTE,
+      rol: isAdmin ? UserRole.ADMIN : UserRole.CLIENTE,
     });
 
     // Retornar datos sin el hash de la contraseña

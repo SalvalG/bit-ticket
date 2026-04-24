@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Hero.css';
 
-const Hero = () => {
+const Hero = ({ onSearch }) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (onSearch) {
+      onSearch(inputValue);
+      // Hacer scroll suave hacia la sección de eventos
+      document.getElementById('eventos')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="hero" id="inicio">
       <div className="hero-background">
@@ -23,10 +34,16 @@ const Hero = () => {
           Deportes, teatro, conferencias y conciertos en un solo lugar.
         </p>
         
-        <div className="hero-search glass-panel">
-          <input type="text" placeholder="Buscar artista, evento o recinto..." className="search-input" />
-          <button className="btn-primary">Buscar Boletos</button>
-        </div>
+        <form className="hero-search glass-panel" onSubmit={handleSearch}>
+          <input 
+            type="text" 
+            placeholder="Buscar artista, evento o recinto..." 
+            className="search-input" 
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <button type="submit" className="btn-primary">Buscar Boletos</button>
+        </form>
       </div>
     </section>
   );

@@ -7,6 +7,7 @@ import {
   Body,
   Query,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -36,12 +37,16 @@ export class EventsController {
     return this.eventsService.findOne(id);
   }
 
-  /** UC6: POST /api/events — Crear evento (Admin) */
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async create(@Body() createEventDto: CreateEventDto) {
-    return this.eventsService.create(createEventDto);
+    try {
+      return await this.eventsService.create(createEventDto);
+    } catch (error) {
+      console.error('ERROR EN CREAR EVENTO:', error);
+      throw new BadRequestException(error.message || 'Error interno al crear evento');
+    }
   }
 
   /** UC6: PUT /api/events/:id — Modificar evento (Admin) */

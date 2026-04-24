@@ -78,13 +78,15 @@ export class EventsService {
     const { zonas, ...eventData } = createEventDto;
 
     // Validar que la fecha sea futura
-    if (new Date(eventData.fecha) <= new Date()) {
+    const eventDate = new Date(eventData.fecha);
+    if (eventDate <= new Date()) {
       throw new BadRequestException('La fecha del evento debe ser una fecha futura.');
     }
 
-    // Crear el evento
+    // Crear el evento (convertir la cadena de fecha a un objeto Date para MySQL)
     const event = this.eventsRepository.create({
       ...eventData,
+      fecha: eventDate,
       estado: EventStatus.ACTIVO,
     });
     const savedEvent = await this.eventsRepository.save(event);

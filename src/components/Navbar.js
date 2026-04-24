@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Navbar.css';
 
-const Navbar = ({ user, onLoginClick, onLogout }) => {
+const Navbar = ({ user, onLoginClick, onLogout, onMyEventsClick }) => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -30,6 +30,7 @@ const Navbar = ({ user, onLoginClick, onLogout }) => {
                 Hola, {user.nombre}
                 {user.rol === 'ADMIN' && <span style={{marginLeft: '8px', fontSize: '0.7rem', padding: '2px 6px', background: 'var(--primary)', borderRadius: '10px', color: '#000', fontWeight: 'bold'}}>ADMIN</span>}
               </span>
+              <button className="btn-primary" onClick={onMyEventsClick} style={{padding: '8px 16px', fontSize: '0.9rem'}}>Mis Eventos</button>
               <button className="btn-secondary" onClick={onLogout} style={{padding: '8px 16px', fontSize: '0.9rem'}}>Salir</button>
             </div>
           ) : (

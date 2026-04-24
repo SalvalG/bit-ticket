@@ -3,11 +3,13 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Events from './components/Events';
 import AuthModal from './components/AuthModal';
+import MyEventsModal from './components/MyEventsModal';
 
 function App() {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isMyEventsModalOpen, setIsMyEventsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -39,6 +41,7 @@ function App() {
         user={user} 
         onLoginClick={() => setIsAuthModalOpen(true)} 
         onLogout={handleLogout} 
+        onMyEventsClick={() => setIsMyEventsModalOpen(true)}
       />
       <Hero
         onSearch={(q) => setSearchQuery(q)}
@@ -56,6 +59,12 @@ function App() {
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)} 
         onLoginSuccess={handleLoginSuccess}
+      />
+
+      <MyEventsModal
+        isOpen={isMyEventsModalOpen}
+        onClose={() => setIsMyEventsModalOpen(false)}
+        token={token}
       />
     </div>
   );

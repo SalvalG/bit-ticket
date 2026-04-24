@@ -148,8 +148,8 @@ const CheckoutModal = ({ isOpen, onClose, token, user, event, onPurchaseSuccess,
               >
                 <option value="" style={{color: 'black'}}>-- Elige una opción --</option>
                 {event.zonas && event.zonas.map(z => (
-                  <option key={z.id} value={z.id} style={{color: 'black'}}>
-                    {z.nombre} - ${z.precio}
+                  <option key={z.id} value={z.id} style={{color: 'black'}} disabled={z.asientos_disponibles <= 0}>
+                    {z.nombre} - ${z.precio} {z.asientos_disponibles !== undefined ? `(Disponibles: ${z.asientos_disponibles})` : ''}
                   </option>
                 ))}
               </select>
